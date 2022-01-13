@@ -1,3 +1,5 @@
+let modalTime;
+
 function openModal(modal) {
    modal.style.display = "block";
    document.body.style.overflow = "hidden";
@@ -8,18 +10,21 @@ function closeModal(modal) {
    document.body.style.overflow = "";
 }
 
-let modalTime;
-
-const modal = (triggerSelector, modalSelector, closeSelector) => {
+const modal = (triggerSelector, modalSelector, closeSelector, clickOverlay = true) => {
+   
    const trigger = document.querySelectorAll(triggerSelector),
          modalBlock = document.querySelector(modalSelector),
-         closeBtn = document.querySelector(closeSelector);
+         closeBtn = document.querySelector(closeSelector),
+         otherModal = document.querySelectorAll(`[data-modal]`);
 
-   trigger.forEach(item => {
+   trigger.forEach((item, i) => {
       item.addEventListener('click', (event) => {
          if (event.target) {
             event.preventDefault();
          }
+         otherModal.forEach(item => {
+            closeModal(item);
+         });
          openModal(modalBlock);
          clearTimeout(modalTime);
       });
@@ -33,7 +38,7 @@ const modal = (triggerSelector, modalSelector, closeSelector) => {
    });
 
    modalBlock.addEventListener('click', (event) => {
-      if (event.target && event.target === modalBlock) {
+      if (event.target && event.target === modalBlock && clickOverlay) {
          closeModal(modalBlock);
       }
    });

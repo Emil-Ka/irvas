@@ -1,10 +1,10 @@
-const tabs = (headerSelector, tabSelector, contentSelector, activeClass) => {
+const tabs = (headerSelector, tabSelector, contentSelector, activeClass, display = "block") => {
    const header = document.querySelector(headerSelector),
          tabs = document.querySelectorAll(tabSelector),
-         contents = document.querySelectorAll(contentSelector);
+         content = document.querySelectorAll(contentSelector);
 
    function hideTabContent() {
-      contents.forEach(item => {
+      content.forEach(item => {
          item.style.display = 'none';
       });
       tabs.forEach(tab => {
@@ -13,31 +13,27 @@ const tabs = (headerSelector, tabSelector, contentSelector, activeClass) => {
    }
 
    function showTabContent(i = 0) {
-      contents[i].style.display = 'block';
+      content[i].style.display = display;
       tabs[i].classList.add(activeClass);
    }
 
    hideTabContent();
    showTabContent();
-   
-   tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => {
-         hideTabContent();
-         showTabContent(i);
-      });
-   });
 
-   // header.addEventListener('click', (event) => {
-   //    const target = event.target;
-   //    if (target && (target.classList.contains(tabSelector.replace(/\./, '')) || target.parentNode.classList.contains(tabSelector.replace(/\./, '')))) {
-   //       tabs.forEach((tab, i) => {
-   //          if (target == tab || target == tab.parentNode) {
-   //             hideTabContent();
-   //             showTabContent(i);
-   //          }
-   //       });
-   //    }
-   // });
+   header.addEventListener('click', (event) => {
+      const target = event.target;
+
+      if (target && 
+         (target.classList.contains(tabSelector.replace(/\./, '')) || 
+         target.parentNode.classList.contains(tabSelector.replace(/\./, '')))) {
+            tabs.forEach((tab, i) => {
+               if (tab == target || tab == target.parentNode) {
+                  hideTabContent();
+                  showTabContent(i);
+               }
+            });
+      }
+   });
 };
 
 export default tabs;
